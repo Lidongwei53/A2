@@ -1,4 +1,5 @@
 package cn.edu.sustech.cs209.chatting.server;
+
 import cn.edu.sustech.cs209.chatting.common.Message;
 import javafx.application.Platform;
 import java.io.*;
@@ -20,7 +21,7 @@ public class Main {
         userList = new ArrayList<>();
         socketList = new ArrayList<>();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(()->{
+        Runtime.getRuntime().addShutdownHook(new Thread(()-> {
             try {
                 for (Socket socket:socketList){
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
@@ -36,7 +37,7 @@ public class Main {
     }
 
     public void run() throws IOException {
-        while(true) {
+        while (true) {
             Socket socket = serverSocket.accept();
             Handler hd = new Handler(socket);
             new Thread(hd).start();
@@ -63,6 +64,7 @@ public class Main {
 
     }
 }
+
 class Handler implements Runnable{
     public Socket socket;
 
@@ -72,7 +74,7 @@ class Handler implements Runnable{
 
 
     public void sendAllUserListChange() throws IOException {
-        for(int i =0;i<Main.socketList.size();i++){
+        for (int i =0; i<Main.socketList.size(); i++){
             ObjectOutputStream oos = new ObjectOutputStream(Main.socketList.get(i).getOutputStream());
             String j = "";
             for(int k = 0;k < Main.userList.size();k++) {
@@ -89,7 +91,7 @@ class Handler implements Runnable{
     @Override
     public void run() {
         try {
-            while(true) {
+            while (true) {
 
 
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
@@ -104,7 +106,7 @@ class Handler implements Runnable{
                             }
 
                         }
-                        if(flag == 0) {
+                        if (flag == 0) {
                             if (message.getSentBy() != null) {
                                 Main.userList.add(message.getSentBy());
                                 Main.socketList.add(socket);
@@ -114,7 +116,7 @@ class Handler implements Runnable{
                                 sendAllUserListChange();
                             }
                         }
-                        if(flag == 1) {
+                        if (flag == 1) {
                             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                             Message message1 = new Message(null, null, null, null, -1);
                             oos.writeObject(message1);
@@ -128,7 +130,7 @@ class Handler implements Runnable{
                         ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                         String j = "";
                         for (int i = 0; i < Main.userList.size(); i++) {
-                            if(!Main.userList.get(i).equals(message.getSentBy())){
+                            if (!Main.userList.get(i).equals(message.getSentBy())){
                             j = j + Main.userList.get(i) + ",";
                             }
                         }
@@ -145,7 +147,7 @@ class Handler implements Runnable{
                     case 6:{
                         Socket socket1 = null;
                         String sendTo = message.getSendTo();
-                        for(int i=0; i<Main.userList.size(); i++){
+                        for (int i=0; i<Main.userList.size(); i++){
                             if (Main.userList.get(i).equals(sendTo)){
                                 socket1 = Main.socketList.get(i);
                                 break;
@@ -162,7 +164,7 @@ class Handler implements Runnable{
                     case 5:{
 
                             Socket socket1= null;
-                            for (int i=0;i<Main.userList.size();i++){
+                            for (int i=0; i<Main.userList.size(); i++){
                                 if (Main.userList.get(i).equals(message.getSendTo())){
                                     socket1 = Main.socketList.get(i);
                                     break;

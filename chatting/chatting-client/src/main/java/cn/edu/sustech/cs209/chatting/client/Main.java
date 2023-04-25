@@ -30,10 +30,10 @@ public class Main extends Application {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                if(controller!=null){
+                if (controller!=null){
                     try {
                         controller.stopThread();
-                        Platform.runLater(()->{
+                        Platform.runLater(()-> {
                             try {
                                 controller.socket.close();
                             } catch (IOException e) {

@@ -1,4 +1,5 @@
 package cn.edu.sustech.cs209.chatting.client;
+
 import cn.edu.sustech.cs209.chatting.common.Message;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -98,7 +99,7 @@ public class Controller implements Initializable {
                 Message message1 = (Message) ois.readObject();
 
                 flag = message1.getMessageType()+1;
-                if(flag==0){
+                if (flag==0){
 
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Invalid username!");
@@ -121,7 +122,7 @@ public class Controller implements Initializable {
             userUIList = FXCollections.observableArrayList();
 
 
-            Listener listener = new Listener(socket,username,this);
+            Listener listener = new Listener(socket, username, this);
             listenerThread= new Thread(listener);
             listenerThread.start();
 
@@ -149,11 +150,11 @@ public class Controller implements Initializable {
     }
 
     public void stopThread() throws IOException {
-        Platform.runLater(()->{
+        Platform.runLater(()-> {
 
             try {
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                Message message = new Message(null,username,null,"Quit",13);
+                Message message = new Message(null, username, null, "Quit", 13);
                 oos.writeObject(message);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -166,29 +167,29 @@ public class Controller implements Initializable {
     }
 
     public void updateGroupChatList(){
-        if(sendMode==2){
+        if (sendMode==2){
             groupChatList.getItems().clear();
-            if(!groupSelectMap.get(userSendTo).isEmpty()){
+            if (!groupSelectMap.get(userSendTo).isEmpty()){
                 List<String> GPLST = groupSelectMap.get(userSendTo);
                 List<String> fnLSt = new ArrayList<>();
 
 
-                for (int i=0;i<GPLST.size();i++){
+                for (int i=0; i<GPLST.size(); i++){
                     int flag = 0;
-                    if(userList.size()==0){
+                    if (userList.size()==0){
                         fnLSt.add(username);
                         break;
                     }
-                    else{
+                    else {
                         for (int j =0; j< userList.size(); j++){
-                            if(GPLST.get(i).equals(userList.get(j))||GPLST.get(i).equals(username)){
+                            if (GPLST.get(i).equals(userList.get(j))||GPLST.get(i).equals(username)){
                                 flag=1;
                                 break;
                             }
                         }
                     }
 
-                    if(flag==1){
+                    if (flag==1){
                         fnLSt.add(GPLST.get(i));
                     }
                 }
@@ -196,22 +197,16 @@ public class Controller implements Initializable {
                 groupChatList.setItems(obs);
             }
         }
-        else{
+        else {
             List<String> lst = new ArrayList<>();
-            int flag=0;
-            for(int i=0;i<userList.size();i++){
-                if(userList.get(i).equals(userSendTo));
-                flag=1;
-                break;
-            }
-            if(flag==1){
+            if (userList.contains(userSendTo)){
                 lst.add(userSendTo);
             }
-            if(!lst.isEmpty()){
+            if (!lst.isEmpty()){
                 ObservableList<String> obs = FXCollections.observableArrayList(lst);
                 groupChatList.setItems(obs);
             }
-            else{
+            else {
                 groupChatList.getItems().clear();
             }
 
@@ -243,7 +238,6 @@ public class Controller implements Initializable {
         label.setAlignment(Pos.CENTER);
         stage[0].setScene(scene);
 
-
         stage[0].show();
         PauseTransition delay = new PauseTransition(Duration.seconds(5));
         delay.setOnFinished(e->{
@@ -251,8 +245,6 @@ public class Controller implements Initializable {
             stage[0] =null;
         });
         delay.play();
-
-
 
     }
 
@@ -275,7 +267,7 @@ public class Controller implements Initializable {
             user.set(userSel.getSelectionModel().getSelectedItem());
             stage.close();
             String u = user.get();
-            if(u!=null) {
+            if (u!=null) {
                 int flag = 0;
                 for (int i = 0; i < userUIList.size(); i++) {
                     if (u.equals(userUIList.get(i))) {
@@ -293,8 +285,8 @@ public class Controller implements Initializable {
                         break;
                     }
                 }
-                if(flag == 0) {
-                    if(u != null) {
+                if (flag == 0) {
+                    if (u != null) {
                         userUIList.add(u);
                         List<Message> UML = new ArrayList<>();
                         UML.add(new Message(null,null,null,"Anchor",-10));
@@ -346,7 +338,7 @@ public class Controller implements Initializable {
         Stage stage = new Stage();
         List<String> selectedItems = new ArrayList<>();
 
-        for(int i =0;i< userList.size();i++) {
+        for (int i =0;i< userList.size();i++) {
             String item = userList.get(i);
             CheckBox checkBox = new CheckBox(item);
             checkBox.setOnAction(event -> {
@@ -363,15 +355,15 @@ public class Controller implements Initializable {
             okBtn.setOnAction(e -> {
                 //user.set(selectedItems.toString());
                 stage.close();
-                if(!selectedItems.isEmpty()){
+                if (!selectedItems.isEmpty()){
                     selectedItems.add(username);
                     List<String> finalItems = selectedItems.stream().sorted().collect(Collectors.toList());
                     String str="";
-                    if(finalItems.size()<3){
+                    if (finalItems.size()<3){
                         str = str+ finalItems.get(0)+", "+finalItems.get(1)+" (2)";
 
                     }
-                    else{
+                    else {
                         str = str+ finalItems.get(0)+", "+finalItems.get(1)+", "+finalItems.get(2)+"..."+" ("+finalItems.size()+")";
                     }
                     Message message = new Message(null,null,null,"Anchor",-10);
@@ -421,14 +413,14 @@ public class Controller implements Initializable {
     public void doSendMessage() throws IOException {
         String msg = inputArea.getText();
         inputArea.clear();
-        if(!msg.isEmpty()&&!msg.trim().isEmpty()){
+        if (!msg.isEmpty()&&!msg.trim().isEmpty()){
             switch (sendMode){
                 case 1:{
                     ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                     Message message = new Message(null,username,userSendTo,msg,5);
                     oos.writeObject(message);
 
-                    if(!userMessageMap.get(userSendTo).isEmpty()){
+                    if (!userMessageMap.get(userSendTo).isEmpty()){
                         userMessageMap.get(userSendTo).add(message);
                         ObservableList<Message> obs = FXCollections.observableArrayList();
                         for(int i=1;i<userMessageMap.get(userSendTo).size();i++){
@@ -546,13 +538,13 @@ public class Controller implements Initializable {
                 }
             };
             cell.setOnMouseClicked(event -> {
-                if(!cell.isEmpty()){
-                    if(controller.groupSelectMap.containsKey(cell.getItem())){
+                if (!cell.isEmpty()){
+                    if (controller.groupSelectMap.containsKey(cell.getItem())){
                         controller.userSendTo=cell.getItem();
                         controller.sendMode=2;
                         controller.updateGroupChatList();
                     }
-                    else{
+                    else {
                         controller.userSendTo=cell.getItem();
                         controller.sendMode=1;
                         controller.updateGroupChatList();
@@ -560,7 +552,7 @@ public class Controller implements Initializable {
 
 
                     controller.chatContentList.getItems().clear();
-                    if(!controller.userMessageMap.get(controller.userSendTo).isEmpty()){
+                    if (!controller.userMessageMap.get(controller.userSendTo).isEmpty()){
                         ObservableList<Message> obs = FXCollections.observableArrayList();
                             for(int i=1;i<controller.userMessageMap.get(controller.userSendTo).size();i++){
                                 obs.add(controller.userMessageMap.get(controller.userSendTo).get(i));

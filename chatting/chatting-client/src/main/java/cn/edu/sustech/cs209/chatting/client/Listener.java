@@ -67,8 +67,8 @@ public class Listener implements Runnable{
                         controller.userList.clear();
                         String j = message.getData();
                         String[]t = j.split(",");
-                        for(int k =0;k<t.length;k++){
-                            if(!username.equals(t[k])){
+                        for (int k =0; k<t.length; k++){
+                            if (!username.equals(t[k])){
                             controller.userList.add(t[k]);
                             }
                         }
@@ -82,7 +82,7 @@ public class Listener implements Runnable{
 
                     case 5:{
                         Platform.runLater(()->{
-                            if(!controller.userMessageMap.isEmpty()) {
+                            if (!controller.userMessageMap.isEmpty()) {
                                 List<Message> lst;
                                 lst = controller.userMessageMap.get(message.getSentBy());
                                 lst.add(message);
@@ -91,7 +91,7 @@ public class Listener implements Runnable{
                                     obs.add(lst.get(i));
                                 }
                                 controller.userMessageMap.put(message.getSentBy(),lst);
-                                if(message.getSentBy().equals(controller.userSendTo)){
+                                if (message.getSentBy().equals(controller.userSendTo)){
                                     controller.chatContentList.setItems(FXCollections.observableArrayList(obs));
                                 }
 
@@ -101,19 +101,19 @@ public class Listener implements Runnable{
                         break;
                     }
                     case 7:{
-                        if(message.getSentBy()!=null){
+                        if (message.getSentBy()!=null){
                             Platform.runLater(()->{
                                 /*controller.userUIList.add(message.getSentBy());
                                 controller.chatList.setItems(controller.userUIList);
                                 controller.updateUserListCell();*/
                                 int flag =0;
-                                for(int i=0;i<controller.userUIList.size();i++){
+                                for (int i=0; i<controller.userUIList.size(); i++){
                                     if (controller.userUIList.get(i).equals(message.getSentBy())){
                                         flag=1;
                                         break;
                                     }
                                 }
-                                if(flag==0){
+                                if (flag==0){
                                     controller.userUIList.add(message.getSentBy());
                                     List<Message> UML = new ArrayList<>();
                                     UML.add(new Message(null,null,null,"Anchor",-10));
@@ -128,7 +128,7 @@ public class Listener implements Runnable{
                         break;
                     }
                     case 9:{
-                        Platform.runLater(()->{
+                        Platform.runLater(()-> {
                             String str = message.getSendTo();
                             List<String> lst = message.getGroupList();
                             controller.userUIList.add(message.getSendTo());
@@ -147,7 +147,7 @@ public class Listener implements Runnable{
                     }
                     case 17:{
                         Platform.runLater(()->{
-                            if(!controller.userMessageMap.isEmpty()) {
+                            if (!controller.userMessageMap.isEmpty()) {
                                 String str = message.getSendTo();
                                 List<Message> lst;
                                 lst = controller.userMessageMap.get(str);
@@ -157,7 +157,7 @@ public class Listener implements Runnable{
                                     obs.add(lst.get(i));
                                 }
                                 controller.userMessageMap.put(str,lst);
-                                if(message.getSendTo().equals(controller.userSendTo)){
+                                if (message.getSendTo().equals(controller.userSendTo)){
                                     controller.chatContentList.setItems(FXCollections.observableArrayList(obs));
                                 }
 
